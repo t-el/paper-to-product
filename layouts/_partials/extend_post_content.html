@@ -1,0 +1,45 @@
+{{- /* Money blocks: render only when configured. Never output setup notes or placeholders. */ -}}
+{{- if eq .Section "reports" }}
+{{- $m := site.Params.monetization | default dict }}
+{{- $ad := and ($m.adsenseClient | default "") ($m.adsenseSlotInArticle | default "") }}
+{{- $nl := $m.newsletterAction | default "" }}
+{{- $sp := and ($m.sponsorText | default "") ($m.sponsorURL | default "") }}
+{{- $af := $m.affiliates | default slice }}
+{{- if or $ad $nl $sp $af }}
+<aside class="mz-wrap" aria-label="Support this site">
+  {{- if $ad }}
+  <div class="mz-ad">
+    <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article"
+      data-ad-format="fluid" data-ad-client="{{ $m.adsenseClient }}" data-ad-slot="{{ $m.adsenseSlotInArticle }}"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+  {{- end }}
+  {{- if $nl }}
+  <div class="mz-box mz-newsletter">
+    <h3>{{ $m.newsletterCTA | default "Get the brief by email" }}</h3>
+    <form action="{{ $nl }}" method="post" target="_blank" class="mz-form">
+      <input type="email" name="email" placeholder="you@example.com" required aria-label="Email address">
+      <button type="submit">Subscribe</button>
+    </form>
+  </div>
+  {{- end }}
+  {{- if $sp }}
+  <div class="mz-box mz-sponsor">
+    <span class="mz-label">Sponsor</span>
+    <p><a href="{{ $m.sponsorURL | relLangURL }}" rel="sponsored">{{ $m.sponsorText }}</a></p>
+  </div>
+  {{- end }}
+  {{- if $af }}
+  <div class="mz-box mz-affiliates">
+    <span class="mz-label">Tools we use</span>
+    <ul>
+      {{- range $af }}
+      <li><a href="{{ .url }}" rel="sponsored nofollow noopener" target="_blank">{{ .name }}</a> — {{ .blurb }}</li>
+      {{- end }}
+    </ul>
+    <p class="mz-muted mz-small">Some links are affiliate links; we may earn a commission at no cost to you.</p>
+  </div>
+  {{- end }}
+</aside>
+{{- end }}
+{{- end }}

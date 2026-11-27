@@ -1,0 +1,8 @@
+{{- /* Monetization: AdSense loader only when a client id is configured */ -}}
+{{- with site.Params.monetization.adsenseClient }}
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ . }}" crossorigin="anonymous"></script>
+{{- end }}
+{{- /* Article schema extras for reports */ -}}
+{{- if and .IsPage (eq .Section "reports") }}
+<meta name="news_keywords" content="{{ delimit (.Params.tags | default slice) ", " }}">
+{{- end }}
