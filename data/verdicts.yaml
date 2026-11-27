@@ -1,0 +1,9 @@
+# One entry per report, appended in the same commit as the report.
+# Rules: docs/report-style.md, section 6.
+entries:
+  - date: "2026-11-27"
+    arxiv_id: "2611.34894"
+    product: "DropRead"
+    verdict: "Feature"
+    score: 4.5
+    url: "/reports/2026/11/27/"
