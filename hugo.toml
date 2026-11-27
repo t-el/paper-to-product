@@ -1,0 +1,135 @@
+# ─────────────────────────────────────────────────────────────
+#  Paper → Product in 24h — Hugo config
+#  Rename the site: change `title` + params.brand below.
+#  baseURL is overridden in CI by actions/configure-pages output.
+# ─────────────────────────────────────────────────────────────
+baseURL = "https://t-el.github.io/paper-to-product/"
+title = "Paper → Product in 24h"
+theme = "PaperMod"
+locale = "en-US"
+defaultContentLanguage = "en"
+timeZone = "Africa/Casablanca"
+enableRobotsTXT = true
+enableGitInfo = false
+buildDrafts = false
+buildFuture = false
+summaryLength = 40
+copyright = "© Paper → Product in 24h · Product ideas, not investment advice"
+
+[pagination]
+  pagerSize = 10
+
+[minify]
+  disableXML = true
+  minifyOutput = true
+
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+  section = ["HTML", "RSS"]
+  taxonomy = ["HTML", "RSS"]
+  term = ["HTML", "RSS"]
+
+[taxonomies]
+  tag = "tags"
+  category = "categories"
+
+[permalinks]
+  [permalinks.page]
+    reports = "/reports/:year/:month/:day/"
+
+[sitemap]
+  changeFreq = "daily"
+  priority = 0.5
+  filename = "sitemap.xml"
+
+[services]
+  [services.rss]
+    limit = 50
+  [services.googleAnalytics]
+    ID = ""            # e.g. "G-XXXXXXX" — leave empty to disable
+
+[markup]
+  [markup.goldmark.renderer]
+    unsafe = false
+  [markup.highlight]
+    noClasses = false
+
+[params]
+  env = "production"          # enables OpenGraph / Twitter cards / schema.org in PaperMod
+  description = "Every day, one fresh arXiv paper turned into the startup it could become: plain-words summary, product spec, a 2-week MVP, who pays, moat check, kill criteria, and a verdict: Business, Feature or Demo."
+  keywords = ["arXiv to startup", "research commercialization", "AI startup ideas", "deep tech product", "paper to product", "MVP from research"]
+  author = "Paper → Product in 24h"
+  # Default share image for non-report pages is assets/images/cover-base.png (see README, Cover images).
+  # Reports get a generated cover automatically; override with cover.image in front matter.
+  DateFormat = "January 2, 2006"
+  defaultTheme = "dark"
+  ShowReadingTime = true
+  ShowShareButtons = true
+  ShareButtons = ["x", "linkedin", "reddit", "whatsapp", "telegram"]
+  ShowPostNavLinks = true
+  ShowBreadCrumbs = true
+  ShowCodeCopyButtons = true
+  ShowToc = true
+  TocOpen = false
+  ShowRssButtonInSectionTermList = true
+  disableSpecial1stPost = false
+  mainSections = ["reports"]
+
+  [params.homeInfoParams]
+    Title = "Paper → Product in 24h"
+    Content = "Every day we take ONE fresh arXiv paper from the last few days and write the startup it could become: what the paper really shows, the product, a 2-week MVP, who pays, the moat, and the kill criteria. Then we call it: **Business**, **Feature** or **Demo**. Every claim about a paper links to the paper. All verdicts are on the [Verdicts](verdicts/) page."
+
+  [[params.socialIcons]]
+    name = "rss"
+    url = "/index.xml"
+
+  [params.fuseOpts]
+    keys = ["title", "summary", "content"]
+
+  # Monetization: leave a field empty to hide that block completely (see README).
+  [params.monetization]
+    adsenseClient = ""
+    adsenseSlotInArticle = ""
+    newsletterAction = ""
+    newsletterProvider = ""
+    newsletterCTA = ""
+    sponsorText = ""
+    sponsorURL = ""
+    # affiliates = []   # add [[params.monetization.affiliates]] entries when you have real links
+
+[menu]
+  [[menu.main]]
+    identifier = "reports"
+    name = "Reports"
+    url = "/reports/"
+    weight = 10
+  [[menu.main]]
+    identifier = "verdicts"
+    name = "Verdicts"
+    url = "/verdicts/"
+    weight = 15
+  [[menu.main]]
+    identifier = "tags"
+    name = "Tags"
+    url = "/tags/"
+    weight = 20
+  [[menu.main]]
+    identifier = "archives"
+    name = "Archive"
+    url = "/archives/"
+    weight = 30
+  [[menu.main]]
+    identifier = "search"
+    name = "Search"
+    url = "/search/"
+    weight = 40
+  [[menu.main]]
+    identifier = "advertise"
+    name = "Advertise"
+    url = "/advertise/"
+    weight = 45
+  [[menu.main]]
+    identifier = "about"
+    name = "About"
+    url = "/about/"
+    weight = 50

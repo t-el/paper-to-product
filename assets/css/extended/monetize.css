@@ -1,0 +1,11 @@
+.mz-wrap{margin:2.5rem 0 1rem;display:grid;gap:1rem}
+.mz-box{border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem;background:var(--entry)}
+.mz-box h3{margin:0 0 .6rem;font-size:1.1rem}
+.mz-form{display:flex;gap:.5rem;flex-wrap:wrap}
+.mz-form input{flex:1 1 220px;padding:.55rem .75rem;border:1px solid var(--border);border-radius:6px;background:var(--theme);color:var(--primary)}
+.mz-form button{padding:.55rem 1.1rem;border-radius:6px;border:0;background:var(--primary);color:var(--theme);cursor:pointer;font-weight:600}
+.mz-label{display:inline-block;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--secondary);margin-bottom:.35rem}
+.mz-muted{color:var(--secondary)}
+.mz-small{font-size:.8rem;margin:.5rem 0 0}
+.mz-affiliates ul{margin:0;padding-left:1.1rem}
+.mz-ad{min-height:1px}

@@ -1,0 +1,33 @@
+/* Paper → Product in 24h: lab notebook meets VC memo. Off-white paper, ink-blue text accents, red-pencil highlights. */
+:root{
+  --theme:#faf7f0;--entry:#fffdf8;--primary:#1a2440;--secondary:#5b6478;
+  --tertiary:#efeadf;--content:#222a3d;--code-block-bg:#1a2440;--code-bg:#efeadf;--border:#e2dccd;
+  --pp-ink:#1f3a93;--pp-red:#c0392b;
+}
+:root[data-theme="dark"]{
+  --theme:#161a24;--entry:#1d2230;--primary:#ece7dc;--secondary:#a3abbd;
+  --tertiary:#262c3c;--content:#dcd7cc;--code-block-bg:#10131b;--code-bg:#262c3c;--border:#2f3648;
+  --pp-ink:#8fa8ff;--pp-red:#ff7b6b;
+}
+:root:not([data-theme="dark"]) body{
+  background-image:linear-gradient(rgba(31,58,147,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(31,58,147,.05) 1px,transparent 1px);
+  background-size:24px 24px;
+}
+body{font-family:"Inter","Helvetica Neue",system-ui,-apple-system,sans-serif;font-size:17px}
+.post-title,.entry-header h2,.post-content h2,.post-content h3,.logo a{font-family:"Fraunces","Newsreader",Georgia,serif}
+code,pre,.gy-board .num{font-family:"DM Mono","IBM Plex Mono",ui-monospace,monospace}
+.post-content{line-height:1.7}
+.logo a{color:var(--pp-ink)}
+.post-content a{color:var(--pp-ink);box-shadow:0 1px 0 var(--pp-ink)}
+#menu a:hover,#menu .active{color:var(--pp-red)}
+.post-content h2{border-bottom:2px solid var(--pp-ink);padding-bottom:.25rem}
+.post-content h2::before{content:"§ ";color:var(--pp-red)}
+.post-content blockquote{border-inline-start:3px solid var(--pp-red);background:var(--tertiary);padding:.7rem 1rem;border-radius:4px}
+.post-content table{font-size:.88rem}
+.gy-board table{width:100%;border-collapse:collapse;font-size:.88rem;margin:1rem 0 2rem}
+.gy-board th,.gy-board td{border-bottom:1px solid var(--border);padding:.45rem .5rem;text-align:left;vertical-align:top}
+.gy-board th{color:var(--secondary);font-weight:600;text-transform:uppercase;font-size:.72rem;letter-spacing:.06em}
+.gy-board .num{text-align:right;font-variant-numeric:tabular-nums}
+.pp-v{display:inline-block;padding:.05rem .5rem;border-radius:4px;font-size:.75rem;border:1.5px solid;font-family:"DM Mono",ui-monospace,monospace;text-transform:uppercase}
+.pp-v-business{color:#1e7a46;border-color:#1e7a46}.pp-v-feature{color:var(--pp-ink);border-color:var(--pp-ink)}.pp-v-demo{color:var(--pp-red);border-color:var(--pp-red)}
+.gy-note{color:var(--secondary);font-size:.85rem}
