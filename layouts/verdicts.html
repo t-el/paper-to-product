@@ -1,0 +1,27 @@
+{{- define "main" }}
+{{- $entries := hugo.Data.verdicts.entries | default slice }}
+<header class="page-header"><h1>{{ .Title }}</h1>
+{{- with .Description }}<div class="post-description">{{ . }}</div>{{ end }}
+</header>
+<div class="post-content gy-board">
+{{ .Content }}
+{{- if $entries }}
+{{- $b := len (where $entries "verdict" "Business") }}{{ $f := len (where $entries "verdict" "Feature") }}{{ $d := len (where $entries "verdict" "Demo") }}
+{{- $sum := 0.0 }}{{ range $entries }}{{ $sum = add $sum (float .score) }}{{ end }}
+<p class="gy-note">{{ len $entries }} papers · {{ $b }} Business · {{ $f }} Feature · {{ $d }} Demo · average score {{ printf "%.1f" (div $sum (len $entries)) }}/10</p>
+<table>
+<thead><tr><th>Date</th><th>Product</th><th>Paper</th><th>Verdict</th><th class="num">Score</th></tr></thead>
+<tbody>
+{{- range sort $entries "date" "desc" }}
+<tr>
+<td>{{ (time .date).Format "Jan 2, 2006" }}</td>
+<td><a href="{{ strings.TrimPrefix "/" .url | relURL }}">{{ .product }}</a></td>
+<td><a href="https://arxiv.org/abs/{{ .arxiv_id }}" rel="noopener">arXiv:{{ .arxiv_id }}</a></td>
+<td><span class="pp-v pp-v-{{ .verdict | lower }}">{{ .verdict }}</span></td>
+<td class="num">{{ .score }}</td>
+</tr>
+{{- end }}
+</tbody></table>
+{{- else }}<p class="gy-note">No verdicts yet.</p>{{ end }}
+</div>
+{{- end }}
