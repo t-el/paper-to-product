@@ -1,0 +1,12 @@
+<div class="social-icons" {{ with .align}}align="{{.}}" {{- end }}>
+    {{- range site.Params.socialIcons }}
+    {{- $u := trim .url " " }}
+    {{- if and $u (not (strings.Contains $u "://")) (not (strings.HasPrefix $u "mailto:")) }}
+      {{- $u = absURL (strings.TrimPrefix "/" $u) }}
+    {{- end }}
+    <a href="{{ $u | safeURL }}" target="_blank" rel="noopener noreferrer me"
+        title="{{ (.title | default .name) | title }}">
+        {{ partial "svg.html" . }}
+    </a>
+    {{- end }}
+</div>

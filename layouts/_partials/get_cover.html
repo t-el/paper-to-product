@@ -1,0 +1,130 @@
+{{- /*
+  Resolve a report's heading image.
+
+  If front matter sets cover.image, use that (page bundle, assets/, or static/,
+  same lookup order as PaperMod). Otherwise, for reports, paint the arXiv ID, product name and
+  verdict line onto assets/images/cover-base.png at build time.
+
+  Returns a map:
+    has       bool
+    resource  image resource when Hugo can process it, else false
+    url       absolute URL (includes the /paper-to-product/ subpath)
+    alt       alt text
+    caption   optional caption (may contain markdown)
+*/ -}}
+{{- $page := . -}}
+{{- $alt := $page.Title | plainify -}}
+{{- $caption := "" -}}
+{{- $resource := false -}}
+{{- $url := "" -}}
+
+{{- with $page.Params.cover }}
+  {{- if .alt }}
+    {{- $alt = .alt | plainify -}}
+  {{- else if .caption }}
+    {{- $alt = .caption | plainify -}}
+  {{- end }}
+  {{- with .caption }}{{ $caption = . }}{{ end }}
+{{- end }}
+
+{{- if $page.Params.cover.image }}
+  {{- $img := $page.Params.cover.image -}}
+  {{- $cover := ($page.Resources.ByType "image").GetMatch (printf "*%s*" $img) -}}
+  {{- if not $cover }}
+    {{- $cover = (resources.ByType "image").GetMatch (printf "*%s*" $img) -}}
+  {{- end }}
+  {{- if $cover }}
+    {{- $resource = $cover -}}
+    {{- $url = $cover.Permalink -}}
+  {{- else if eq ($page.Params.cover.relative | default false) true }}
+    {{- $url = (path.Join $page.RelPermalink $img) | absURL -}}
+  {{- else }}
+    {{- $url = $img | absURL -}}
+  {{- end }}
+{{- else if and $page.IsPage (eq $page.Section "reports") }}
+  {{- $base := partial "get_cover_base.html" . -}}
+  {{- $fontTitle := false -}}
+  {{- $fontDate := false -}}
+  {{- with resources.Get "fonts/Fraunces-SemiBold.ttf.b64" }}
+    {{- $fontTitle = resources.FromString "fonts/Fraunces-SemiBold.ttf" (.Content | strings.TrimSpace | encoding.Base64Decode) -}}
+  {{- end }}
+  {{- with resources.Get "fonts/DMMono-Medium.ttf.b64" }}
+    {{- $fontDate = resources.FromString "fonts/DMMono-Medium.ttf" (.Content | strings.TrimSpace | encoding.Base64Decode) -}}
+  {{- end }}
+  {{- if and $base $fontTitle $fontDate }}
+    {{- $title := $page.Title | plainify -}}
+    {{- $date := upper ($page.Date.Format "Jan 2, 2006") -}}
+    {{- with $page.Params.verdict }}{{ $date = printf "VERDICT: %s  ·  %v/10  ·  %s" (upper .) ($page.Params.score | default "?") $date }}{{ end }}
+    {{- $cve := "" -}}
+    {{- with $page.Params.arxiv_id }}{{ $cve = printf "arXiv:%s" . }}{{ end }}
+    {{- /* Title format is "Paper → Product — Mon D, YYYY: <product name>"; paint only the product name (the fonts have no arrow glyph). */ -}}
+    {{- $parts := split $title ": " -}}
+    {{- if gt (len $parts) 1 }}{{ $title = delimit (after 1 $parts) ": " }}{{ end }}
+    {{- $size := 62 -}}
+    {{- $tlen := strings.RuneCount $title -}}
+    {{- if gt $tlen 30 }}{{ $size = 50 }}{{ end }}
+    {{- if gt $tlen 60 }}{{ $size = 42 }}{{ end }}
+    {{- /* Wrap so the title keeps the same 72px padding on the right as on the left.
+         images.Text wraps to the full image width and would run into the border. */ -}}
+    {{- $pad := 72 -}}
+    {{- $maxWidth := 760 -}}
+    {{- $maxChars := math.Floor (div (float $maxWidth) (mul (float $size) 0.50)) | int -}}
+    {{- $wrapped := "" -}}
+    {{- $line := "" -}}
+    {{- range (split $title " ") }}
+      {{- $word := . -}}
+      {{- $trial := $word -}}
+      {{- if $line }}{{ $trial = printf "%s %s" $line $word }}{{ end }}
+      {{- if gt (strings.RuneCount $trial) $maxChars }}
+        {{- if $line }}
+          {{- if $wrapped }}{{ $wrapped = printf "%s\n%s" $wrapped $line }}{{ else }}{{ $wrapped = $line }}{{ end }}
+          {{- $line = $word -}}
+        {{- else }}
+          {{- if $wrapped }}{{ $wrapped = printf "%s\n%s" $wrapped $word }}{{ else }}{{ $wrapped = $word }}{{ end }}
+          {{- $line = "" -}}
+        {{- end }}
+      {{- else }}
+        {{- $line = $trial -}}
+      {{- end }}
+    {{- end }}
+    {{- if $line }}
+      {{- if $wrapped }}{{ $wrapped = printf "%s\n%s" $wrapped $line }}{{ else }}{{ $wrapped = $line }}{{ end }}
+    {{- end }}
+    {{- $ls := math.Round (mul (float $size) 0.22) | int -}}
+    {{- $titleOpts := dict
+      "color"       "#1F3A93"
+      "font"        $fontTitle
+      "size"        $size
+      "linespacing" $ls
+      "alignx"      "left"
+      "aligny"      "top"
+      "x"           $pad
+      "y"           190
+    -}}
+    {{- $dateOpts := dict
+      "color"  "#4A5468"
+      "font"   $fontDate
+      "size"   22
+      "alignx" "left"
+      "aligny" "top"
+      "x"      $pad
+      "y"      558
+    -}}
+    {{- $cveOpts := dict
+      "color"  "#C0392B"
+      "font"   $fontDate
+      "size"   26
+      "alignx" "left"
+      "aligny" "top"
+      "x"      $pad
+      "y"      130
+    -}}
+    {{- $filters := slice (images.Text $wrapped $titleOpts) (images.Text $date $dateOpts) -}}
+    {{- if $cve }}{{ $filters = $filters | append (images.Text $cve $cveOpts) }}{{ end }}
+    {{- $generated := $base | images.Filter $filters -}}
+    {{- $resource = $generated -}}
+    {{- $url = $generated.Permalink -}}
+  {{- end }}
+{{- end }}
+
+{{- return (dict "has" (ne $url "") "resource" $resource "url" $url "alt" $alt "caption" $caption) -}}

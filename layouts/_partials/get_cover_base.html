@@ -1,0 +1,9 @@
+{{- $img := false -}}
+{{- with resources.Get "images/cover-base.png" }}
+  {{- $img = . -}}
+{{- else -}}
+  {{- with resources.Get "images/cover-base.png.b64" }}
+    {{- $img = resources.FromString "images/cover-base.png" (.Content | strings.TrimSpace | encoding.Base64Decode) -}}
+  {{- end -}}
+{{- end -}}
+{{- return $img -}}
