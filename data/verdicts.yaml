@@ -7,3 +7,9 @@ entries:
     verdict: "Feature"
     score: 4.5
     url: "/reports/2026/11/27/"
+  - date: "2026-11-27"
+    arxiv_id: "2611.34779"
+    product: "ReserveLab"
+    verdict: "Feature"
+    score: 5.5
+    url: "/reports/2026/11/27/2/"
